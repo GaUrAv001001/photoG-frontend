@@ -1,42 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import AuthContext from '../auth/authContext';
-import ImageModal from '../../utility/ImageModal'; // Import the new ImageModal
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import ImageModal from "../../utility/ImageModal"; // Import the new ImageModal
+import { fetchPublicImages } from "../../features/publicImagesSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Explore() {
-  const [publicImg, setPublicImg] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const { user } = useContext(AuthContext);
+  const publicImg = useSelector((state) => state.publicImg.images);
+  const loading = useSelector((state) => state.publicImg.loading);
+  const error = useSelector((state) => state.publicImg.error);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    const fetchPublicImg = async () => {
-      setLoading(true);
-      setError("");
-      try {
-        const response = await axios.get(`${API_URL}/get-public-images`, {
-          withCredentials: true,
-        });
-
-        if (response.status === 200) {
-          const data = response.data;
-          setPublicImg(data.data);
-        } else {
-          throw new Error(`Error fetching public images! Status: ${response.status}`);
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-      fetchPublicImg();
-  }, []);
+    dispatch(fetchPublicImages());
+  }, [dispatch]);
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
@@ -57,7 +38,9 @@ function Explore() {
 
   return (
     <div className="mx-auto w-full px-4 py-6">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Explore</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Explore
+      </h1>
       {publicImg.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {publicImg.map((image, index) => (

@@ -1,9 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Modal from "../../utility/Modal";
-import AuthContext from "../auth/authContext.jsx";
+import { login, logout, register } from "../../features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Header() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const loading = useSelector((state) => state.auth.loading);
+  const error = useSelector((state) => state.auth.error);
+
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -11,10 +17,6 @@ export default function Header() {
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [avatar, setAvatar] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const { registerUser, loginUser, user, logoutUser } = useContext(AuthContext);
 
   useEffect(() => {
     console.log("User from context in Header:", user);
@@ -30,36 +32,22 @@ export default function Header() {
     setPassword("");
     setUsername("");
     setAvatar(null);
-    setError("");
+    // setError("");
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      await loginUser(email, password);
-      closeModals();
-    } catch (err) {
-      setError("Failed to login. Please check your credentials.");
-    } finally {
-      setLoading(false);
-    }
+    dispatch(login({ email, password }));
+    closeModals();
   };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      await registerUser(fullname, email, password, username, avatar);
-      console.log("ksdslnvids--sbjkss=bs jkb",avatar)
-      closeModals();
-    } catch (err) {
-      setError("Failed to register. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    dispatch(register({ fullname, email, password, username, avatar }));
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -76,10 +64,12 @@ export default function Header() {
           <div className="flex items-center lg:order-2">
             {user ? (
               <>
-                <p className="text-gray-800 font-semibold mr-4">Welcome, {user.username}</p>
+                <p className="text-gray-800 font-semibold mr-4">
+                  Welcome, {user.username}
+                </p>
                 <button
                   className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none"
-                  onClick={logoutUser}
+                  onClick={handleLogout}
                 >
                   Logout
                 </button>
@@ -176,7 +166,10 @@ export default function Header() {
         <h2 className="text-lg font-bold mb-4">Login</h2>
         <form onSubmit={handleLoginSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -189,7 +182,10 @@ export default function Header() {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -219,7 +215,10 @@ export default function Header() {
         <h2 className="text-lg font-bold mb-4">Register</h2>
         <form onSubmit={handleRegisterSubmit}>
           <div className="mb-4">
-            <label htmlFor="fullname" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="fullname"
+              className="block text-sm font-medium text-gray-700"
+            >
               Full Name
             </label>
             <input
@@ -232,7 +231,10 @@ export default function Header() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -245,20 +247,10 @@ export default function Header() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
               Username
             </label>
             <input
@@ -271,14 +263,19 @@ export default function Header() {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="avatar" className="block text-sm font-medium text-gray-700">
-              Avatar (optional)
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
             </label>
             <input
-              type="file"
-              id="avatar"
-              onChange={(e) => setAvatar(e.target.files[0])}
-              className="mt-1 block w-full"
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              required
             />
           </div>
           {error && <p className="text-red-600 text-sm mb-4">{error}</p>}

@@ -1,33 +1,9 @@
-// // components/RoleBasedRoute.jsx
-// import React, { useContext } from 'react';
-// import { Navigate, useLocation } from 'react-router-dom';
-// import AuthContext from './components/auth/authContext';
-
-// const RoleBasedRoute = ({ element, requiredRoles }) => {
-//   const { user } = useContext(AuthContext);
-//   const location = useLocation();
-
-// //   if (loading) {
-// //     return <div>Loading...</div>; // Optional: Show a loading spinner or message
-// //   }
-
-//   if (!user || !requiredRoles.includes(user.role)) {
-//     return <Navigate to="/" state={{ from: location, message: 'Access Denied' }} />;
-//   }
-
-//   return element;
-// };
-
-// export default RoleBasedRoute;
-
-
-
-import React, { useContext } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import AuthContext from './components/auth/authContext';
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const RoleBasedRoute = ({ element, requiredRoles }) => {
-  const { user, loading } = useContext(AuthContext); // Include loading state
+  const { user, loading } = useSelector((state) => state.auth);
   const location = useLocation();
 
   if (loading) {
@@ -41,13 +17,13 @@ const RoleBasedRoute = ({ element, requiredRoles }) => {
         to="/"
         state={{
           from: location,
-          message: 'Access Denied',
+          message: "Access Denied",
         }}
       />
     );
   }
 
-  return element;
+  return <>{element}</>; // Ensure proper JSX rendering
 };
 
 export default RoleBasedRoute;

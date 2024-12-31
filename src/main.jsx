@@ -1,6 +1,4 @@
-// code 5
-
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -15,15 +13,16 @@ import Home from "./components/home/Home.jsx";
 import About from "./components/about/About.jsx";
 import Contact from "./components/contact/Contact.jsx";
 import User from "./components/user/User.jsx";
-import { AuthProvider } from "./components/auth/authContext.jsx"; // Import AuthProvider instead
-import AuthContext from "./components/auth/authContext.jsx";
 import PrivateRoutes from "./PrivateRoutes.jsx";
 import RoleBasedRoutes from "./RoleBasedRoutes.jsx";
 import Album from "./components/Album/Album.jsx";
 import Explore from "./components/explore/Explore.jsx";
 import AlbumDetail from "./components/album/AlbumDetails.jsx";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { store } from "./app/store.js";
+import { fetchCurrentUser } from "./features/auth/authSlice.js";
 
-// Define your router structure
+// Create Router
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
@@ -43,31 +42,39 @@ const router = createBrowserRouter(
         }
       />
       <Route path="album" element={<PrivateRoutes element={<Album />} />} />
-      <Route path="album/:albumname" element={<PrivateRoutes element={<AlbumDetail />} />} />
+      <Route
+        path="album/:albumname"
+        element={<PrivateRoutes element={<AlbumDetail />} />}
+      />
       <Route path="explore" element={<PrivateRoutes element={<Explore />} />} />
     </Route>
   )
 );
 
-// Wrap your application with AuthProvider to make the context available throughout
-// ReactDOM.createRoot(document.getElementById("root")).render(
-//   <React.StrictMode>
-//     <AuthProvider> {/* Use AuthProvider to wrap your app */}
-//       <RouterProvider router={router} />
-//     </AuthProvider>
-//   </React.StrictMode>
-// );
+// This component manages the loading state
+function AppWrapper() {
+  const { loading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="bg-[#4e4e4e] text-white text-6xl min-h-screen">
+        Loading...
+      </div>
+    );
+  }
+
+  return <RouterProvider router={router} />;
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      {/* Render a loader while checking authentication */}
-      <AuthContext.Consumer>
-        {({ loading }) =>
-          loading ? <div>Loading...</div> : <RouterProvider router={router} />
-        }
-      </AuthContext.Consumer>
-    </AuthProvider>
+    <Provider store={store}>
+      <AppWrapper />
+    </Provider>
   </React.StrictMode>
 );
