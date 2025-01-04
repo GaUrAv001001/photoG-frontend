@@ -3,6 +3,10 @@ import { Link, NavLink } from "react-router-dom";
 import Modal from "../../utility/Modal";
 import { login, logout, register } from "../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import photoGImg from '../../images/photoGImg.png'
+import photoGImg2 from '../../images/photoGImg2.png'
+import photoGImg3 from '../../images/photoGImg3.png'
+import '../../index.css'
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -56,8 +60,8 @@ export default function Header() {
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <Link to="/" className="flex items-center">
             <img
-              src="https://alexharkness.com/wp-content/uploads/2020/06/logo-2.png"
-              className="mr-3 h-12"
+              src={photoGImg3}
+              className="mr-3 h-16"
               alt="Logo"
             />
           </Link>
@@ -68,7 +72,7 @@ export default function Header() {
                   Welcome, {user.username}
                 </p>
                 <button
-                  className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none"
+                  className={`text-black bg-custom hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-semibold rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none`}
                   onClick={handleLogout}
                 >
                   Logout
@@ -84,7 +88,7 @@ export default function Header() {
                 </button>
                 <button
                   onClick={openRegisterModal}
-                  className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none"
                 >
                   Register
                 </button>

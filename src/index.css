@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.bg-custom {
+    background-color: #FFD500 ; /* example background color */
+  }

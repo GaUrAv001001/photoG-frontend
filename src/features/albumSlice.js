@@ -71,6 +71,21 @@ export const deleteAlbum = createAsyncThunk(
   }
 );
 
+export const addImageToAlbum = createAsyncThunk(
+  "albums/addImageToAlbum",
+  async ({albumId, imageId}, {rejectWithValue})=>{
+    try {
+      const response = await axios.post(`${API_URL}/album/${albumId}/images/${imageId}`, {}, {
+        withCredentials:true,
+      })
+      console.log("addIMF: ", response)
+      return {albumId, image:response.data.data};
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Error in adding image to album!")
+    }
+  }
+)
+
 const initialState = {
   albums: [],
   albumDetails: null,
@@ -145,7 +160,23 @@ const albumSlice = createSlice({
       .addCase(deleteAlbum.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      // add image to album
+      .addCase(addImageToAlbum.pending, (state)=>{
+        state.loading = true;
+      })
+      .addCase(addImageToAlbum.fulfilled, (state, action)=>{
+        state.loading = false;
+        const {albumId, image} = action.payload;
+        const album = state.albums.find((album)=> album._id == albumId);
+        if(album){
+          album.images.push(image);
+        }
+      })
+      .addCase(addImageToAlbum.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 
