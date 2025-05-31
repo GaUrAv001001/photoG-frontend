@@ -3,7 +3,7 @@ import {
   login as loginService,
   logout as logoutService,
   fetchCurrentUser as fetchCurrentUserService,
-  register as registerService,
+  register as registerServ,
 } from "../../services/authService.js";
 
 export const fetchCurrentUser = createAsyncThunk(
@@ -36,11 +36,12 @@ export const register = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const reponse = await registerService(userData);
+      console.log("userData: ", userData)
+      const response = await registerServ(userData);
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.reponse?.data?.message || "Registeration failed!"
+        error.response?.data?.message || "Registeration failed!"
       );
     }
   }
@@ -108,8 +109,8 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(register.rejected, (state) => {
-        state.error = false;
+      .addCase(register.rejected, (state, action) => {
+        // state.error = false;
         state.error = action.payload;
       })
       // Logout

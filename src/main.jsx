@@ -11,7 +11,7 @@ import {
 import Layout from "./Layout.jsx";
 import Home from "./components/home/Home.jsx";
 import About from "./components/about/About.jsx";
-import Contact from "./components/contact/Contact.jsx";
+// import Dashboard from "./components/dashboard/Dashboard.jsx";
 import User from "./components/user/User.jsx";
 import PrivateRoutes from "./PrivateRoutes.jsx";
 import RoleBasedRoutes from "./RoleBasedRoutes.jsx";
@@ -21,6 +21,8 @@ import AlbumDetail from "./components/album/AlbumDetails.jsx";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "./app/store.js";
 import { fetchCurrentUser } from "./features/auth/authSlice.js";
+import Dashboard from "./components/Dashboard/Dashboard.jsx";
+import UserProfile from "./components/dashboard/UserProfile.jsx";
 
 // Create Router
 const router = createBrowserRouter(
@@ -28,13 +30,14 @@ const router = createBrowserRouter(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
       <Route path="about" element={<About />} />
+      <Route path="userprofile" element={<UserProfile/>} />
       <Route
-        path="contact"
+        path="dashboard"
         element={
           <PrivateRoutes
             element={
               <RoleBasedRoutes
-                element={<Contact />}
+                element={<Dashboard/>}
                 requiredRoles={["admin", "superadmin"]}
               />
             }

@@ -47,6 +47,7 @@ export default function Header() {
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    console.log("fullname : " + fullname)
     dispatch(register({ fullname, email, password, username, avatar }));
   };
 
@@ -68,9 +69,11 @@ export default function Header() {
           <div className="flex items-center lg:order-2">
             {user ? (
               <>
+              <NavLink to="/userprofile">
                 <p className="text-gray-800 font-semibold mr-4">
                   Welcome, {user.username}
                 </p>
+                </NavLink>
                 <button
                   className={`text-black bg-custom hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-semibold rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none`}
                   onClick={handleLogout}
@@ -88,7 +91,7 @@ export default function Header() {
                 </button>
                 <button
                   onClick={openRegisterModal}
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none"
+                  className="text-black bg-custom hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300  font-medium rounded-lg text-sm px-5 py-2.5 transition duration-300 focus:outline-none"
                 >
                   Register
                 </button>
@@ -105,8 +108,8 @@ export default function Header() {
                   to="/"
                   className={({ isActive }) =>
                     `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                      isActive ? "text-yellow-500" : "text-gray-700"
+                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-yellow-500 lg:p-0`
                   }
                 >
                   Home
@@ -117,8 +120,8 @@ export default function Header() {
                   to="/about"
                   className={({ isActive }) =>
                     `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                      isActive ? "text-yellow-500" : "text-gray-700"
+                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-yellow-500 lg:p-0`
                   }
                 >
                   About
@@ -126,14 +129,14 @@ export default function Header() {
               </li>
               <li>
                 <NavLink
-                  to="/contact"
+                  to="/dashboard"
                   className={({ isActive }) =>
                     `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                      isActive ? "text-yellow-500" : "text-gray-700"
+                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-yellow-500 lg:p-0`
                   }
                 >
-                  Contact
+                  Dashboard
                 </NavLink>
               </li>
               <li>
@@ -141,8 +144,8 @@ export default function Header() {
                   to="/album"
                   className={({ isActive }) =>
                     `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                      isActive ? "text-yellow-500" : "text-gray-700"
+                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-yellow-500 lg:p-0`
                   }
                 >
                   Album
@@ -153,8 +156,8 @@ export default function Header() {
                   to="/explore"
                   className={({ isActive }) =>
                     `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                      isActive ? "text-yellow-500" : "text-gray-700"
+                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-yellow-500 lg:p-0`
                   }
                 >
                   Explore
@@ -204,7 +207,7 @@ export default function Header() {
           {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
           <button
             type="submit"
-            className={`w-full text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 ${
+            className={`w-full text-black font-semibold bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 rounded-lg text-sm px-4 py-2 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={loading}
@@ -285,7 +288,7 @@ export default function Header() {
           {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
           <button
             type="submit"
-            className={`w-full text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 ${
+            className={`w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 py-2 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={loading}

@@ -19,10 +19,31 @@ export const fetchPublicImages = createAsyncThunk(
   }
 );
 
+export const uploadImage = createAsyncThunk(
+  "images/uploadImage",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      };
+      const response = await axios.post(`${API_URL}/upload-image`, formData, config);
+      return response.data.data; // Assuming the uploaded image data is returned here
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to upload image!"
+      );
+    }
+  }
+);
+
 const initialState = {
   images: [],
   loading: false,
   error: null,
+  uploadSuccess: false,
 };
 
 const publicImagesSlice = createSlice({
@@ -41,7 +62,20 @@ const publicImagesSlice = createSlice({
       .addCase(fetchPublicImages.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      // Upload Image
+      .addCase(uploadImage.pending, (state)=>{
+        state.loading = true;
+        state.uploadSuccess = false;
+      })
+      .addCase(uploadImage.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.images.push(action.payload);
+      })
+      .addCase(uploadImage.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 

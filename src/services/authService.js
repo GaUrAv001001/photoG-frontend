@@ -54,14 +54,22 @@ export const login = async (email, password) => {
 };
 
 // Function to register user
-export const register = async (fullname, email, password, username, avatar) => {
+export const register = async (userData) => {
   try {
+    // const formData = new FormData();
+    // formData.append("fullname", fullname);
+    // formData.append("email", email);
+    // formData.append("password", password);
+    // formData.append("username", username);
+    // formData.append("avatar", avatar);
+
     const formData = new FormData();
-    formData.append("fullname", fullname);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("username", username);
-    formData.append("avatar", avatar);
+    Object.keys(userData).forEach((key) =>
+      formData.append(key, userData[key])
+    );
+
+
+    console.log("formData: ", formData)
 
     const response = await axios.post(`${API_URL}/register`, formData, {
       headers: {
